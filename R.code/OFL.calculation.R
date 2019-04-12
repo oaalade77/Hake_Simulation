@@ -36,7 +36,7 @@ orig.data$'Survey.stdev'  <- sqrt(orig.data$'Survey.var')
 # Calculate moving averages
 calc.mov.avg <- function(x,nyr=nyr.mov.avg) {  filter(x, rep((1/nyr),nyr), sides=1, method='convolution')  }  
 mov.avg.data <- data.frame( apply(orig.data[,c('Survey.kg.tow','Exploit.index')], 2, calc.mov.avg) )
-rownames(mov.avg.data) <- rownames(orig.data)
+  rownames(mov.avg.data) <- rownames(orig.data)
 
 # Add survey variance calculation
 calc.survey.var <- function(x,nyr=nyr.mov.avg) {  filter(x, rep(1,nyr), sides=1, method='convolution') * (1/nyr.mov.avg)^2  }
@@ -51,7 +51,7 @@ rm(orig.tmp, yr.tmp)
 
 # Final moving average for each time series
 final.mov.avgs <- as.data.frame(t( apply( mov.avg.data, 2, function(x){tail(na.omit(x),1)} ) ))
-rownames(final.mov.avgs) <- NULL
+  rownames(final.mov.avgs) <- NULL
 
 # Test to ensure filter function is used correctly
 # final.yrs.orig.data <- data.frame(apply(orig.data, 2, function(x){ tail(na.omit(x),nyr.mov.avg) } ))
@@ -61,14 +61,20 @@ rownames(final.mov.avgs) <- NULL
 surv.bounds <- c(0.1*final.mov.avgs$'Survey.kg.tow',1.9*final.mov.avgs$'Survey.kg.tow')   
 x.surv.normal <- seq(from=surv.bounds[1],to=surv.bounds[2],length=2000)   
 surv.normal <- dnorm(x.surv.normal,mean=final.mov.avgs$'Survey.kg.tow',sd=sqrt(final.mov.avgs$'Survey.var'))
+windows()
 plot(x.surv.normal, surv.normal)
+# See the mode
+x.surv.normal[surv.normal==max(surv.normal)]
+
 
 # Create normal distribution for the exploitation index (relative F)
 exploit.bounds <- c(0.1*final.mov.avgs$'Exploit.index',1.9*final.mov.avgs$'Exploit.index')  
 x.exploit.normal <- seq(from=exploit.bounds[1],to=exploit.bounds[2],length=2000)   
 exploit.normal <- dnorm(x.exploit.normal, mean=final.mov.avgs$'Exploit.index', sd=sqrt(final.mov.avgs$'Exploit.var'))
+windows()
 plot(x.exploit.normal, exploit.normal)
-
+# See the mode
+x.exploit.normal[exploit.normal==max(exploit.normal)]
 
 
 
