@@ -75,7 +75,10 @@ windows()
 plot(x.exploit.normal, exploit.normal)
 # See the mode
 x.exploit.normal[exploit.normal==max(exploit.normal)]
+  
 
+# Calculate joint probability distribution
+### Need to confirm what survey probabilities to use
 
 
 
